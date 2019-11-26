@@ -18,7 +18,9 @@ namespace Xamarin.Forms.Platform.Blazor
 			nameof(VisualElement.X),
 			nameof(VisualElement.Y),
 			nameof(VisualElement.Width),
-			nameof(VisualElement.Height)
+			nameof(VisualElement.Height),
+			nameof(VisualElement.IsVisible),
+			nameof(VisualElement.IsEnabled),
 		};
 
 		VisualElement IVisualElementRenderer.Element => this.Element;
@@ -115,11 +117,12 @@ namespace Xamarin.Forms.Platform.Blazor
 		{
 			base.SetBasicStyles();
 
-			this.Styles["top"] = $"{this.Element.Bounds.Top}px; ";
-			this.Styles["left"] = $"{this.Element.Bounds.Left}px; ";
-			this.Styles["width"] = $"{this.Element.Bounds.Width}px; ";
-			this.Styles["height"] = $"{this.Element.Bounds.Height}px; ";
-			this.Styles["position"] = "absolute";
+			this.MainStyle.Properties["top"] = $"{this.Element.Bounds.Top}px; ";
+			this.MainStyle.Properties["left"] =  $"{this.Element.Bounds.Left}px; ";
+			this.MainStyle.Properties["width"] = $"{this.Element.Bounds.Width}px; ";
+			this.MainStyle.Properties["height"] = $"{this.Element.Bounds.Height}px; ";
+			this.MainStyle.Properties["position"] = "absolute";
+			//this.MainStyle.Properties["visibility"] = (this.Element.IsVisible)? "visible" : "hidden";
 		}
 	}
 }

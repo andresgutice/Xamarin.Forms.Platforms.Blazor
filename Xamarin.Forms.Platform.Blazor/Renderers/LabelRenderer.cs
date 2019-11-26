@@ -60,19 +60,17 @@ namespace Xamarin.Forms.Platform.Blazor.Renderers
 		{
 			base.SetBasicStyles();
 
-			this.Styles["line-height"] = this.ActualLineHeight.ToString();
-
-			this.Styles["background-color"] = Element.BackgroundColor.ToHTMLColor();
-			this.Styles["color"] = this.Element.TextColor.ToHTMLColor();
-
+			this.MainStyle.Properties["line-height"] = this.ActualLineHeight.ToString();
+			this.MainStyle.Properties["background-color"] = Element.BackgroundColor.ToHTMLColor();
+			this.MainStyle.Properties["color"] = this.Element.TextColor.ToHTMLColor();
 			if (string.IsNullOrEmpty(this.Element.FontFamily))
-				this.Styles["font-family"] = "unset";
+				this.MainStyle.Properties["font-family"] = "unset";
 			else
-				this.Styles["font-family"] = this.Element.FontFamily;
+				this.MainStyle.Properties["font-family"] = this.Element.FontFamily;
 
 			double fs = this.Element.FontSize;
 			if (!double.IsNaN(fs))
-				this.Styles["font-size"] = fs.ToString() + "px";			
+				this.MainStyle.Properties["font-size"] = fs.ToString() + "px";
 		}
 
 		protected override Size MeasureOverride(Size availableSize)
@@ -80,19 +78,19 @@ namespace Xamarin.Forms.Platform.Blazor.Renderers
 			if (_needsTextMeasure)
 			{
 				_needsTextMeasure = false;
-                var t = XFUilities.MeasureText(
-                    this.Element.Text,
-                    this.Element.FontFamily,
-                    this.Element.FontSize);
-                t.ContinueWith(t =>
+				var t = XFUilities.MeasureText(
+					this.Element.Text,
+					this.Element.FontFamily,
+					this.Element.FontSize);
+				t.ContinueWith(t =>
 				{
 					this.DesiredSize = new Size(t.Result, this.Element.FontSize * this.ActualLineHeight);
 					this.Element.NativeSizeChanged();
-                    this.InvalidateRender();
+					this.InvalidateRender();
 				});
 				return new Size(
-                    this.Element.FontSize * 0.75 * this.Element.Text.Length,   // just a guess
-                    this.Element.FontSize);
+					this.Element.FontSize * 0.75 * this.Element.Text.Length,   // just a guess
+					this.Element.FontSize);
 			}
 			else
 			{

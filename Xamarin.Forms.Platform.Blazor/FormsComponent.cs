@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Xamarin.Forms.Platform.Blazor.Interop;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Xamarin.Forms.Platform.Blazor
 {
@@ -53,8 +54,9 @@ namespace Xamarin.Forms.Platform.Blazor
 			set => SetElement(value);
 		}
 
-		protected Dictionary<string, string> Styles { get; } = new Dictionary<string, string>();
-	
+		protected Style MainStyle { get; } = new Style();
+		protected List<IStyle> Styles { get; } = new List<IStyle>();
+
 		public Size DesiredSize
 		{
 			get
@@ -115,6 +117,11 @@ namespace Xamarin.Forms.Platform.Blazor
 		{
 		}
 
+		public string GetStyleName(string name)
+		{
+			return $"{name}{this.Element.GetHashCode()}";
+		}
+
 		protected override sealed void BuildRenderTree(RenderTreeBuilder builder)
 		{
 			RenderCounter = 0;
@@ -122,27 +129,34 @@ namespace Xamarin.Forms.Platform.Blazor
 
 			this.SetBasicStyles();
 
-			string style = $"style{this.Element.GetHashCode()}";
+			this.MainStyle.Name = GetStyleName("style");
+			this.Styles.Add(this.MainStyle);
 
 			base.BuildRenderTree(builder);
 
 			builder.OpenElement(RenderCounter++, "style");
-			builder.AddContent(RenderCounter++, $@".{style} 
-				{{
-					all: initial;
-					{this.ConstructCSS()}
-				}}");
+			this.Styles.ForEach(x => builder.AddContent(RenderCounter++, x.GetStyleCSS()));
 			builder.CloseElement();
 
-			BuildSelectorStyles(builder, style);
+			BuildSelectorStyles(builder, this.MainStyle.Name);
+
+			//Add stylesheet css reference
+			builder.OpenElement(RenderCounter++, "link");
+			builder.AddAttribute(RenderCounter++, "rel", "stylesheet");
+			builder.AddAttribute(RenderCounter++, "href", "https://www.w3schools.com/w3css/4/w3.css");
+			builder.CloseElement();
 
 			builder.OpenElement(RenderCounter++, "div");
-			builder.AddAttribute(RenderCounter++, "class", style);
-
+			builder.AddAttribute(RenderCounter++, "class", this.MainStyle.Name);
 			AddAdditionalAttributes(builder);
-
 			builder.AddContent(RenderCounter++, RenderContent);
 			builder.CloseElement();
+		}
+
+		private string ConstructCSS(IDictionary<string, string> parameters)
+		{
+			return string.Concat(
+				parameters.Select(k => $"{k.Key}: {k.Value};\r"));
 		}
 
 		protected virtual void AddAdditionalAttributes(RenderTreeBuilder builder)
@@ -151,12 +165,6 @@ namespace Xamarin.Forms.Platform.Blazor
 
 		protected virtual void RenderContent(RenderTreeBuilder builder)
 		{
-		}
-
-		private string ConstructCSS()
-		{
-			return string.Concat(
-				this.Styles.Select(k => $"{k.Key}: {k.Value};\r"));
 		}
 
 		protected virtual void SetBasicStyles()

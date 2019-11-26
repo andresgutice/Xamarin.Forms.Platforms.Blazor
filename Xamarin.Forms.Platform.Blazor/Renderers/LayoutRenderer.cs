@@ -29,7 +29,7 @@ namespace Xamarin.Forms.Platform.Blazor.Renderers
 		protected override void SetBasicStyles()
 		{
 			base.SetBasicStyles();
-			this.Styles["background"] = Element.BackgroundColor.ToHTMLColor();
+			this.MainStyle.Properties["background"] = Element.BackgroundColor.ToHTMLColor();
 		}
 
 		protected override void RenderContent(RenderTreeBuilder builder)

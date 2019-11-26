@@ -8,46 +8,41 @@
         <local:ViewModel />
     </ContentPage.BindingContext>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <StackLayout Orientation="Vertical"
-                     Grid.Column="0">
-            <Label Text="{Binding StatusText}"
-                   FontFamily="Courier New"
-                   FontSize="18"
-                   TextColor="Red"
-                   HorizontalOptions="CenterAndExpand"/>
+    <ContentPage.Content>
+        <StackLayout Padding="20">
 
-            <Button Margin="0"
-                    BorderColor="Black"
-                    BorderWidth="1"
-                    FontFamily="Arial"
-                    FontSize="14"
-                    HorizontalOptions="Center"
-                    BackgroundColor="#2040FF"
-                    TextColor="White"
-                    CornerRadius="3"
+
+            <Entry Placeholder="Escribir aquí..."
+                   FontSize="Large"
+                   IsEnabled="False"
+                   IsPassword="True"
+                   TextColor="Red"/>
+            
+
+            <Button Text="Aceptar"
+                    HorizontalOptions="Start"
                     Padding="10"
-                    Text="Click me!"
-                    Command="{Binding ClickedCommand}"/>
+                    TextColor="White"
+                    BackgroundColor="Purple"/>
+
+            <Entry Placeholder="Escribir aquí..."
+                   IsVisible="True"
+                   PlaceholderColor="Blue"
+                   TextColor="Red"/>
+            <ActivityIndicator Color="Purple"
+                               BackgroundColor="Blue"
+                               HorizontalOptions="Start"
+                               VerticalOptions="Center"
+                               WidthRequest="120"
+                               HeightRequest="120"
+                               IsRunning="True"/>
+            <Button Text="Aceptar"
+                    IsEnabled="False"
+                    HorizontalOptions="Start"
+                    Padding="10"
+                    TextColor="White"
+                    BackgroundColor="Purple"/>
+
         </StackLayout>
-
-        <Grid Grid.Column="1"
-              BackgroundColor="Green">
-            <Label Text="Column 2"
-                   FontFamily="Times New Roman"
-                   FontSize="14"/>
-        </Grid>
-
-        <Grid Grid.Column="2"
-              BackgroundColor="Orange">
-            <Label Text="Column 3"
-                   FontFamily="Times New Roman"
-                   FontSize="14"/>
-        </Grid>
-    </Grid>
+    </ContentPage.Content>
 </ContentPage>

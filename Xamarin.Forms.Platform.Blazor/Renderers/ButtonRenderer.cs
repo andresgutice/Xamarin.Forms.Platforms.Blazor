@@ -7,6 +7,7 @@ using Xamarin.Forms;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
+using System.Threading.Tasks;
 
 [assembly: Xamarin.Forms.Platform.Blazor.ExportRenderer(
 	typeof(Button),
@@ -59,23 +60,37 @@ namespace Xamarin.Forms.Platform.Blazor.Renderers
 		{
 			base.SetBasicStyles();
 
-			this.Styles["line-height"] = "1";
-			this.Styles["cursor"] = "pointer";
-			this.Styles["font"] = this.Element.FontFamily;
-			this.Styles["font-family"] = this.ActualFontFamily;
+			//var style = new Style($"button[type={GetStyleName("buttonConfig")}]", "");
+			var style = new Style(GetStyleName("buttonConfig"));
+			style.Properties["line-height"] = "1";
+			style.Properties["cursor"] = "pointer";
+			style.Properties["padding"] = $"{this.Element.Padding.Top}px";
+			style.Properties["font"] = this.Element.FontFamily;
+
+			if (string.IsNullOrEmpty(this.Element.FontFamily))
+				this.MainStyle.Properties["font-family"] = "unset";
+			else
+				this.MainStyle.Properties["font-family"] = this.Element.FontFamily;
 
 			double fs = this.Element.FontSize;
 			if (!double.IsNaN(fs))
-				this.Styles["font-size"] = fs.ToString() + "px";
+				style.Properties["font-size"] = fs.ToString() + "px";
 
-			this.Styles["color"] = this.Element.TextColor.ToHTMLColor();
-			this.Styles["background-color"] = Element.BackgroundColor.ToHTMLColor();
+			style.Properties["display"] = "block";
+			style.Properties["width"] = "100%";
+			style.Properties["color"] = this.Element.TextColor.ToHTMLColor();
+			style.Properties["background-color"] = Element.BackgroundColor.ToHTMLColor();
+			style.Properties["border"] = $"{this.ActualBorderWidth}px";
+			style.Properties["border-style"] = "solid";
+			style.Properties["border-color"] = $"{Element.BorderColor.ToHTMLColor()}";
+			style.Properties["border-radius"] = $"{Element.CornerRadius}px";
+			this.Styles.Add(style);
 
-			this.Styles["border"] = $"{this.ActualBorderWidth}px";
+			var style2 = new Style(style.Name + ":hover");
+			style2.Properties["background-color"] = "#ddd";
+			style2.Properties["color"] = "black";
+			//this.Styles.Add(style2);
 
-			this.Styles["border-style"] = "solid";
-			this.Styles["border-color"] = $"{Element.BorderColor.ToHTMLColor()}";
-			this.Styles["border-radius"] = $"{Element.CornerRadius}px";
 		}
 
 		protected override void AddAdditionalAttributes(RenderTreeBuilder builder)
@@ -105,11 +120,10 @@ namespace Xamarin.Forms.Platform.Blazor.Renderers
 
 		protected override void RenderContent(RenderTreeBuilder builder)
 		{
-			builder.OpenElement(RenderCounter++, "div");
-			builder.AddAttribute(RenderCounter++, "style", 
-				$"position: absolute; " +
-				$"top: {Element.Padding.Top}px; " +
-				$"left: {Element.Padding.Left}px; ");
+			builder.OpenElement(RenderCounter++, "button");
+			builder.AddAttribute(RenderCounter++, "class", $"{GetStyleName("buttonConfig")}");
+			if (!this.Element.IsEnabled)
+				builder.AddAttribute(RenderCounter++, "disabled", "disabled");
 			builder.AddContent(this.RenderCounter++, this.Element.Text);
 			builder.CloseElement();
 		}
@@ -135,11 +149,11 @@ namespace Xamarin.Forms.Platform.Blazor.Renderers
                         this.InvalidateRender();
 					});
 				return new Size(
-					this.Element.Padding.HorizontalThickness 
-						// + this.ActualBorderWidth * 2
+					this.Element.Bounds.Width
+						//+ this.ActualBorderWidth * 2
 						,
-					this.Element.FontSize +
-						this.Element.Padding.VerticalThickness
+					this.Element.FontSize // +
+						//this.Element.Bounds.Height
 						//+ this.ActualBorderWidth * 2
 						);
 			}
@@ -147,13 +161,12 @@ namespace Xamarin.Forms.Platform.Blazor.Renderers
 			{
 				return new Size
 				{
-					Width = _textSize.Width + 
-						this.Element.Padding.HorizontalThickness 
+					Width = _textSize.Width + this.Element.Bounds.Width
 						//+ this.ActualBorderWidth * 2
 						,
-					Height = _textSize.Height + 
-						this.Element.Padding.VerticalThickness 
-						//+ this.ActualBorderWidth * 2
+					Height = _textSize.Height + this.Element.Bounds.Height
+					//(this.Element.Bounds.Height 
+					//+ this.ActualBorderWidth * 2
 				};
 			}
 		}
