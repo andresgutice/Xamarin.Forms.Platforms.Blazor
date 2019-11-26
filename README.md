@@ -8,6 +8,9 @@ Visual Studio 2017, latest update.
 
 ASP.NET Core Blazor Language Services Visual Studio Extension
 
+## Status
+You can see the current [Status](https://github.com/andresgutice/Xamarin.Forms.Platforms.Blazor/blob/master/Status.md) of the views in Xamarin.Forms.Platforms.Blazor
+
 ## Getting Started
 Compile and run the `Xamarin.Forms.Blazor.TestApp.BlazorServer` project. You can also run the `Xamarin.Forms.Blazor.TestApp.Reference` (Universal Windows) project for a side-by-side view of the application using the UWP backend as a reference.
 

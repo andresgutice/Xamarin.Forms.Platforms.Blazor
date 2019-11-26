@@ -169,17 +169,17 @@ A [Label](https://developer.xamarin.com/api/type/Xamarin.Forms.Label/) is used t
 
 Property | Status
 ------ | ------
-BackgroundColor   | Pending  
+BackgroundColor   | Done  
 IsEnabled   | Pending  
 FormattedText   | Pending
 HorizontalTextAlignment   | Pending  
 LineBreakMode   | Pending  
-Text   | Pending  
-TextColor   | Pending  
+Text   | Done  
+TextColor   | Done  
 VerticalTextAlignment   | Pending  
-FontAttributes   | Pending  
-FontFamily   | Pending  
-FontSize   | Pending  
+FontAttributes   | Done  
+FontFamily   | Done  
+FontSize   | Done  
 XAlign   | Pending  
 YAlign   | Pending  
 
